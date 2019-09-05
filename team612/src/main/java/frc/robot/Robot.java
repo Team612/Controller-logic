@@ -65,6 +65,10 @@ public class Robot extends TimedRobot
     public void teleopPeriodic() 
     {
         Scheduler.getInstance().run();
+
+        OI.driver.updateType();
+        OI.gunner.updateType();
+
     }
 
     @Override

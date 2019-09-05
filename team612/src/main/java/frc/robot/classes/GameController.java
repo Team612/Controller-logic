@@ -14,23 +14,35 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class GameController {
 
-    GenericHID controller;
-    String type;
+    private GenericHID controller;
+    private String type;
+
+    // Reference controller objects
+    private Joystick emptyJoystick;
+    private XboxController emptyXboxController;
 
     public GameController(int port) {
-        
-        type = controller.getType().toString();
 
-        switch (type) {
+        // Create two new controller objects in memory
+        emptyJoystick = new Joystick(port);
+        emptyXboxController = new XboxController(port);
+
+        updateType();
+
+    }
+
+    public void updateType() {
+
+        switch (controller.getType().toString()) {
 
             case "kHIDJoystick":
-                type = "Joystick";
-                controller = new Joystick(port);
+                type = "Joystick";  // More readable string format for type
+                controller = emptyJoystick;  // Switch the reference adress of "controller" to the joystick object
                 break;
 
             case "kHIDGamepad":
-                type = "XboxController";
-                controller = new XboxController(port);
+                type = "XboxController";  // More readable string format for type
+                controller = emptyXboxController;  // Switch the reference adress of "controller" to the xbox controller object
                 break;
 
             default:
@@ -41,6 +53,11 @@ public class GameController {
         }
 
     }
+
+    public String getType() {
+        return type;
+    }
+
 
     public double getX() {
         return controller.getX(type == "Joystick" ? null : Hand.kLeft);
