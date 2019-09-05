@@ -58,17 +58,16 @@ public class GameController {
         return type;
     }
 
-
     public double getX() {
-        return controller.getX(type == "Joystick" ? null : Hand.kLeft);
+        return type == "Joystick" ? controller.getX() : controller.getX(Hand.kLeft);
     }
 
     public double getY() {
-        return controller.getY(type == "Joystick" ? null : Hand.kLeft);
+        return type == "Joystick" ? controller.getY() : controller.getY(Hand.kLeft);
     }
 
     public double getZ() {
-        return controller.getY(type == "Joystick" ? null : Hand.kRight);
+        return type == "Joystick" ? controller.getRawAxis(2) : controller.getX(Hand.kRight);
     }
 
 
