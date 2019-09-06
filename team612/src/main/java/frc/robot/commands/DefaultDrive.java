@@ -40,6 +40,11 @@ public class DefaultDrive extends Command {
     direction_x = OI.driver.getX();
     rotation = OI.driver.getZ();
 
+    System.out.println(direction_y);
+    System.out.println(direction_x);
+    System.out.println(rotation);
+    System.out.println(OI.driver.getType());
+
   }
 
   // Called repeatedly when this Command is scheduled to run

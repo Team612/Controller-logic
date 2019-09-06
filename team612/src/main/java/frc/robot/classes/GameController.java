@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class GameController {
 
@@ -20,6 +21,8 @@ public class GameController {
     // Reference controller objects
     private Joystick emptyJoystick;
     private XboxController emptyXboxController;
+
+    private ButtonMap buttonMap=new ButtonMap("/");
 
     public GameController(int port) {
 
@@ -33,21 +36,21 @@ public class GameController {
 
     public void updateType() {
 
-        switch (controller.getType().toString()) {
+        switch (emptyJoystick.getType().toString()) {
 
             case "kHIDJoystick":
                 type = "Joystick";  // More readable string format for type
                 controller = emptyJoystick;  // Switch the reference adress of "controller" to the joystick object
                 break;
 
-            case "kHIDGamepad":
+            case "kXInputGamepad":
                 type = "XboxController";  // More readable string format for type
                 controller = emptyXboxController;  // Switch the reference adress of "controller" to the xbox controller object
                 break;
 
             default:
                 type = "Unknown";
-                controller = null;
+                controller = emptyJoystick;
                 break;
 
         }
@@ -70,5 +73,12 @@ public class GameController {
         return type == "Joystick" ? controller.getRawAxis(2) : controller.getX(Hand.kRight);
     }
 
+    public boolean isPressed(String key){
+        return buttonMap.isPressed(type, key);
+    }
+    
+    public JoystickButton getButton(String key){
+        return buttonMap.getButton(type, key);
+    }
 
 }
