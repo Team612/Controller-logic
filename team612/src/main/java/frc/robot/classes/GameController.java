@@ -45,6 +45,11 @@ public class GameController {
                 controller = emptyXboxController;  // Switch the reference adress of "controller" to the xbox controller object
                 break;
 
+            case "kHIDGamepad":
+                type = "XboxController";  // More readable string format for type
+                controller = emptyXboxController;  // Switch the reference adress of "controller" to the xbox controller object
+                break;
+
             default:
                 type = "Unknown";
                 controller = emptyJoystick;  // If nothing is plugged in just simply assign the empty joystick port to it (so it won't nullpointer exception)
@@ -54,11 +59,11 @@ public class GameController {
 
     }
     
-    public CommandButton createButton(int joystickBtnPort, int xboxBtnPort) {
+    public CommandButton createButton(int joystickBtnPort, int xboxBtnPort) {  // Create a new CommandButton with the button ports binded
         return new CommandButton(this, joystickBtnPort, xboxBtnPort);
     }
 
-    protected GenericHID getCurrentController() {
+    protected GenericHID getCurrentController() {  // Return current controller object (for CommandButton class)
         return controller;
     }
 
