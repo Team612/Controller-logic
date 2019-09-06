@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class CommandButton {
 
-    JoystickButton emptyXboxBtn;
+    /*JoystickButton emptyXboxBtn;
     JoystickButton emptyJoystickBtn;
 
     public CommandButton(GenericHID controller, String type, int xboxBtnPort, int joystickBtnPort) {
 
-        switch (emptyJoystick.getType().toString()) {
+        switch (emptyJoystickBtn.getType().toString()) {
 
             case "kHIDJoystick":
                 
@@ -38,7 +38,7 @@ public class CommandButton {
 
         }
 
-    }
+    }*/
 
 
 }
