@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class GameController {
 
@@ -21,8 +20,6 @@ public class GameController {
     // Reference controller objects
     private Joystick emptyJoystick;
     private XboxController emptyXboxController;
-
-    private ButtonMap buttonMap=new ButtonMap("/");
 
     public GameController(int port) {
 
@@ -50,35 +47,35 @@ public class GameController {
 
             default:
                 type = "Unknown";
-                controller = emptyJoystick;
+                controller = emptyJoystick;  // If nothing is plugged in just simply assign the empty joystick port to it (so it won't nullpointer exception)
                 break;
 
         }
 
     }
+    
+    public CommandButton createButton(int joystickBtnPort, int xboxBtnPort) {
+        return new CommandButton(this, joystickBtnPort, xboxBtnPort);
+    }
 
-    public String getType() {
+    protected GenericHID getCurrentController() {
+        return controller;
+    }
+
+    public String getType() {  // Return the type string of the controller
         return type;
     }
 
-    public double getX() {
+    public double getX() {  // Return the x-axis value of the joystick or xbox controller
         return type == "Joystick" ? controller.getX() : controller.getX(Hand.kLeft);
     }
 
-    public double getY() {
+    public double getY() {  // Return the y-axis value of the joystick or xbox controller
         return type == "Joystick" ? controller.getY() : controller.getY(Hand.kLeft);
     }
 
-    public double getZ() {
+    public double getZ() {  // Return the z-axis (rotation) value of the joystick or xbox controller
         return type == "Joystick" ? controller.getRawAxis(2) : controller.getX(Hand.kRight);
     }
-
-    public boolean isPressed(String key){
-        return buttonMap.isPressed(type, key);
-    }
     
-    public JoystickButton getButton(String key){
-        return buttonMap.getButton(type, key);
-    }
-
 }

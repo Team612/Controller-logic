@@ -15,30 +15,44 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class CommandButton {
 
-    /*JoystickButton emptyXboxBtn;
-    JoystickButton emptyJoystickBtn;
+    private JoystickButton emptyJoystickBtn;
+    private JoystickButton emptyXboxBtn;
 
-    public CommandButton(GenericHID controller, String type, int xboxBtnPort, int joystickBtnPort) {
+    private JoystickButton button;  // Current adress for button
 
-        switch (emptyJoystickBtn.getType().toString()) {
+    // Local versions of variable transfered by GameController class
+    private GameController controller;
 
-            case "kHIDJoystick":
-                
+    public CommandButton(GameController controller, int joystickBtnPort, int xboxBtnPort) {
+
+        // Assign two buttons in memory for each controller type
+        emptyJoystickBtn = new JoystickButton(controller.getCurrentController(), joystickBtnPort);
+        emptyXboxBtn = new JoystickButton(controller.getCurrentController(), xboxBtnPort);
+
+        // Store GameController variable locally to class
+        this.controller = controller;
+
+    }
+    
+    public boolean get() {
+
+        // Change reference variable for button depending on controller type
+        switch (controller.getType()) {
+
+            case "Joystick":
+                button = emptyJoystickBtn;
                 break;
 
-            case "kXInputGamepad":
-                type = "XboxController";  // More readable string format for type
-                controller = emptyXboxController;  // Switch the reference adress of "controller" to the xbox controller object
-                break;
-
-            default:
-                type = "Unknown";
-                controller = emptyJoystick;
+            case "XboxController":
+                button = emptyXboxBtn;
                 break;
 
         }
 
-    }*/
+        // Return current button state
+        return button.get();
+
+    }
 
 
 }
