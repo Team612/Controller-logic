@@ -1,4 +1,4 @@
-+/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
@@ -37,11 +37,11 @@ public class ProfileManager {
 
     public static JoystickButton getDriverButton(String key){
         ControllerProfile p = JSONMap.getDriverProfile(currentDriver);
-        return (driverType==XBOX?p.getXbox():p.getJoystick()).get(key)
+        return (driverType==XBOX?p.getXbox():p.getJoystick()).get(key);
     }
 
     public static JoystickButton getGunnerButton(String key){
         ControllerProfile p = JSONMap.getGunnerProfile(currentDriver);
-        return (gunnerType==XBOX?p.getXbox():p.getJoystick()).get(key)
+        return (gunnerType==XBOX?p.getXbox():p.getJoystick()).get(key);
     }
 }

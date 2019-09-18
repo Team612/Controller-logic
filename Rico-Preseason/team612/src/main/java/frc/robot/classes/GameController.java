@@ -15,14 +15,16 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class GameController {
 
+    /*
+        THIS CODE WORKS, PLEASE DO NOT CHANGE IT
+    */
+
     private GenericHID controller;
     private String type;
 
     // Reference controller objects
     private Joystick emptyJoystick;
     private XboxController emptyXboxController;
-
-    private ButtonMap buttonMap=new ButtonMap("/");
 
     public GameController(int port) {
 
@@ -35,7 +37,6 @@ public class GameController {
     }
 
     public void updateType() {
-
         switch (emptyJoystick.getType().toString()) {
 
             case "kHIDJoystick":
@@ -62,6 +63,7 @@ public class GameController {
     }
 
     public double getX() {
+
         return type == "Joystick" ? controller.getX() : controller.getX(Hand.kLeft);
     }
 
@@ -73,12 +75,8 @@ public class GameController {
         return type == "Joystick" ? controller.getRawAxis(2) : controller.getX(Hand.kRight);
     }
 
-    public boolean isPressed(String key){
-        return buttonMap.isPressed(type, key);
-    }
-    
-    public JoystickButton getButton(String key){
-        return buttonMap.getButton(type, key);
+    public GenericHID getController(){
+        return controller;
     }
 
 }

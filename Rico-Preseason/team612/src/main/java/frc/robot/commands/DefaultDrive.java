@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.classes.profiles.Loader;
 
 public class DefaultDrive extends Command {
 
@@ -35,15 +36,14 @@ public class DefaultDrive extends Command {
 
 
   protected void getInput() {  // Fetch the Joystick values, apply inversion if neccesary
-
-    direction_y = OI.driver.getY();
-    direction_x = OI.driver.getX();
-    rotation = OI.driver.getZ();
+    direction_y = Loader.driver.getY();
+    direction_x = Loader.driver.getX();
+    rotation = Loader.driver.getZ();
 
     System.out.println(direction_y);
     System.out.println(direction_x);
     System.out.println(rotation);
-    System.out.println(OI.driver.getType());
+    System.out.println(Loader.driver.getType());
 
   }
 

@@ -29,33 +29,39 @@ import frc.robot.classes.GameController;
  * Add your docs here.
  */
 public class Loader {
-    private static GameController driver,gunner;
-    //private static Joystick joystick;
+    public static GameController driver, gunner;
 
-    static void loadJSON(String src, GameController driver, GameController gunner){
-        this.gunner=gunner;
-        this.driver=driver;
+    public static void loadJSON(String src, GameController driverC, GameController gunnerC){
+        driver=driverC;
+        gunner=gunnerC;
         Object obj;
-        try{
-            File f=new File(Loader.class.getResource(src).toURI());
+        try{ // Loads file if it exists
+            //File f=new File(Loader.class.getResource(src).toURI());
+            File f=new File("./"+src);
             obj=new JSONParser().parse(new FileReader(f));
-        } catch (IOException | ParseException | URISyntaxException e) {
+        } catch (IOException | ParseException /*| URISyntaxException*/ e) {
+            System.out.println("[ERROR] COULDN'T LOAD PROFILES.JSON");
             e.printStackTrace();
             return;
         }
+        // Init json objects for driver
         JSONObject topObj=(JSONObject) obj;
         JSONObject driver=(JSONObject) topObj.get("driver");
-        String[] driverProfs= setToString(driver.keySet());
+        String[] driverProfs= setToString(driver.keySet()); // Some random stuff
+        // loads all driver info into ControllerProfile[]
         ControllerProfile[] drivers=new ControllerProfile[driverProfs.length];
         for(int i=0;i<drivers.length;i++){
-            drivers[i]=loadProfile((JSONObject)driver.get(driverProfs[i]),driverProfs[i]);
+            drivers[i]=loadProfile((JSONObject)driver.get(driverProfs[i]),driverProfs[i],"driver");
         }
+        // Does the same as driver but for gunner
         JSONObject gunner=(JSONObject) topObj.get("gunner");
         String[] gunnerProfs=setToString(gunner.keySet());
         ControllerProfile[] gunners=new ControllerProfile[gunnerProfs.length];
         for(int i=0;i<gunners.length;i++){
-            gunners[i]=loadProfile((JSONObject)gunner.get(gunnerProfs[i]),gunnerProfs[i]);
+            gunners[i]=loadProfile((JSONObject)gunner.get(gunnerProfs[i]),gunnerProfs[i],"gunner");
         }
+
+        // Loads them all into one JSONMap
         JSONMap.loadProfiles(drivers,gunners);
     }
 
@@ -69,20 +75,28 @@ public class Loader {
         return dest;
     }
 
-    private static ControllerProfile loadProfile(JSONObject profile,String name){
+    private static ControllerProfile loadProfile(JSONObject profile,String name, String pilot){
         HashMap<String, JoystickButton> xboxMaps=new HashMap<>();
-        fillMap(profile,xboxMaps,"xbox");
+        fillMap(profile,xboxMaps,"xbox",pilot);
         HashMap<String,JoystickButton> joystickMaps=new HashMap<>();
-        fillMap(profile,joystickMaps,"joystick");
+        fillMap(profile,joystickMaps,"joystick",pilot);
         return new ControllerProfile(name,xboxMaps,joystickMaps);
     }
 
-    private static void fillMap(JSONObject source, HashMap<String, JoystickButton> dest, String key){
+    private static void fillMap(JSONObject source, HashMap<String, JoystickButton> dest, String key, String pilot){
         JSONObject object=(JSONObject)source.get(key);
         Set keys=object.keySet();
         for(Object o:keys){
             JSONArray arr=(JSONArray)object.get(o);
-            dest.put((String)arr.get(0),new JoystickButton(key.equals("joystick")?joystick:xbox ,(int)arr.get(1)));
+            dest.put((String)arr.get(0),new JoystickButton(pilot.equals("driver")?driver.getController():gunner.getController() ,(int)arr.get(1)));
         }
+    }
+
+    public static GameController getDriverController(){
+        return driver;
+    }
+
+    public static GameController getGunnerController(){
+        return gunner;
     }
 }

@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
+import frc.robot.classes.GameController;
+import frc.robot.classes.profiles.Loader;
 import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot 
@@ -21,6 +22,7 @@ public class Robot extends TimedRobot
     public void robotInit() 
     {
         oi = new OI();
+        Loader.loadJSON("profiles.json", new GameController(RobotMap.DRIVER_PORT), new GameController(RobotMap.GUNNER_PORT));
     }
 
     @Override
