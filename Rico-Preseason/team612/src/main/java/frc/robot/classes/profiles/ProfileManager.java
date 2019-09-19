@@ -7,14 +7,13 @@
 
 package frc.robot.classes.profiles;
 
-import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
- * Add your docs here.
+ * Main class that determines what profile is currently in use, also
+ * queries profiles when a JoystickButton object is requested
  */
-public class ProfileManager {
+public final class ProfileManager {
     public static final int XBOX=0,JOYSTICK=1;
     private static String currentDriver, currentGunner;
     private static int driverType, gunnerType;
@@ -37,11 +36,12 @@ public class ProfileManager {
 
     public static JoystickButton getDriverButton(String key){
         ControllerProfile p = JSONMap.getDriverProfile(currentDriver);
-        return (driverType==XBOX?p.getXbox():p.getJoystick()).get(key);
+        System.out.println(p.getXbox().keySet());
+        return p!=null?(driverType==XBOX?p.getXbox():p.getJoystick()).get(key):null;
     }
 
     public static JoystickButton getGunnerButton(String key){
-        ControllerProfile p = JSONMap.getGunnerProfile(currentDriver);
-        return (gunnerType==XBOX?p.getXbox():p.getJoystick()).get(key);
+        ControllerProfile p = JSONMap.getGunnerProfile(currentGunner);
+        return p!=null?(gunnerType==XBOX?p.getXbox():p.getJoystick()).get(key):null;
     }
 }

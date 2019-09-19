@@ -4,8 +4,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.classes.GameController;
+import frc.robot.classes.profiles.GameController;
 import frc.robot.classes.profiles.Loader;
+import frc.robot.classes.profiles.ProfileManager;
 import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot 
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot
 
         OI.driver.updateType();
         OI.gunner.updateType();
+
+        System.out.println("PRESSED: "+ProfileManager.getDriverButton("A").get());
 
     }
 

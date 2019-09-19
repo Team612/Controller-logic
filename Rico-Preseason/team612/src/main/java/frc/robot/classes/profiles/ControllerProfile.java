@@ -12,7 +12,7 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
- * Add your docs here.
+ * Container class
  */
 public class ControllerProfile {
     private String name;

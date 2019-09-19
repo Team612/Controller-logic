@@ -10,7 +10,6 @@ package frc.robot.classes.profiles;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -19,36 +18,35 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.classes.GameController;
+import frc.robot.classes.profiles.GameController;
 
 /**
- * Add your docs here.
+ * Loads JSON file that contains the controller mappings
  */
-public class Loader {
+public final class Loader {
     public static GameController driver, gunner;
 
     public static void loadJSON(String src, GameController driverC, GameController gunnerC){
         driver=driverC;
         gunner=gunnerC;
         Object obj;
+        System.out.println("START PATH: "+System.getProperty("user.dir"));
         try{ // Loads file if it exists
             //File f=new File(Loader.class.getResource(src).toURI());
-            File f=new File("./"+src);
+            File f=new File("/home/lvuser/"+src);
             obj=new JSONParser().parse(new FileReader(f));
         } catch (IOException | ParseException /*| URISyntaxException*/ e) {
             System.out.println("[ERROR] COULDN'T LOAD PROFILES.JSON");
             e.printStackTrace();
             return;
         }
+        System.out.println("********FOUND PROFILES.JSON, NOW LOADING********");
         // Init json objects for driver
         JSONObject topObj=(JSONObject) obj;
         JSONObject driver=(JSONObject) topObj.get("driver");
         String[] driverProfs= setToString(driver.keySet()); // Some random stuff
-        // loads all driver info into ControllerProfile[]
+        // Loads all driver info into ControllerProfile[]
         ControllerProfile[] drivers=new ControllerProfile[driverProfs.length];
         for(int i=0;i<drivers.length;i++){
             drivers[i]=loadProfile((JSONObject)driver.get(driverProfs[i]),driverProfs[i],"driver");
@@ -63,9 +61,20 @@ public class Loader {
 
         // Loads them all into one JSONMap
         JSONMap.loadProfiles(drivers,gunners);
+        setupProfileManager();
+        System.out.println("********CONTROLLER SETUP COMPLETE********");
     }
 
-    private static String[] setToString(Set source){
+    //Sets up ProfileManager to be queried
+    private static void setupProfileManager(){
+        ProfileManager.setDriverType(driver.getType()=="XboxController"?ProfileManager.XBOX:ProfileManager.JOYSTICK);
+        ProfileManager.setGunnerType(gunner.getType()=="XboxController"?ProfileManager.XBOX:ProfileManager.JOYSTICK);
+        ProfileManager.setCurrentDriver(JSONMap.getDriverProfileNames()[0]);
+        ProfileManager.setCurrentGunner(JSONMap.getGunnerProfileNames()[0]);
+    }
+
+    //Util funciton, don't ask
+    private static String[] setToString(Set<Object> source){
         String[] dest = new String[source.size()];
         int iter=0;
         for (Object o : source) {
@@ -75,6 +84,7 @@ public class Loader {
         return dest;
     }
 
+    //Util funciton, don't ask
     private static ControllerProfile loadProfile(JSONObject profile,String name, String pilot){
         HashMap<String, JoystickButton> xboxMaps=new HashMap<>();
         fillMap(profile,xboxMaps,"xbox",pilot);
@@ -83,12 +93,19 @@ public class Loader {
         return new ControllerProfile(name,xboxMaps,joystickMaps);
     }
 
+    //Util funciton, don't ask
     private static void fillMap(JSONObject source, HashMap<String, JoystickButton> dest, String key, String pilot){
         JSONObject object=(JSONObject)source.get(key);
         Set keys=object.keySet();
         for(Object o:keys){
             JSONArray arr=(JSONArray)object.get(o);
-            dest.put((String)arr.get(0),new JoystickButton(pilot.equals("driver")?driver.getController():gunner.getController() ,(int)arr.get(1)));
+            try{
+                JoystickButton j=new JoystickButton(pilot.equals("driver")?driver.getController():gunner.getController() ,Integer.parseInt((String)arr.get(1)));
+                dest.put((String)arr.get(0),j);
+            }catch(NumberFormatException e){
+                e.printStackTrace();
+                System.out.println("BAAAAAAAAAAAAAAAAAAAAAAD CCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAAAAAST");
+            }
         }
     }
 

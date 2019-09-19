@@ -8,14 +8,20 @@
 package frc.robot.classes.profiles;
 
 /**
- * Add your docs here.
+ * Stores all of the profiles imported from the JSON file
  */
-public class JSONMap {
+public final class JSONMap {
     private static ControllerProfile[] drivers,gunners;
 
     public static void loadProfiles(ControllerProfile[] drivers, ControllerProfile[] gunners){
-        if(drivers!=null)JSONMap.drivers =drivers;
-        if(gunners!=null)JSONMap.gunners=gunners;
+        if(drivers!=null){
+            JSONMap.drivers =drivers;
+            ProfileManager.setCurrentDriver(getDriverProfileNames()[0]);
+        }
+        if(gunners!=null){
+            JSONMap.gunners=gunners;
+            ProfileManager.setCurrentGunner(getGunnerProfileNames()[0]);
+        }
     }
 
     public static ControllerProfile getDriverProfile(String name){
