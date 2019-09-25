@@ -25,7 +25,7 @@ import frc.robot.classes.profiles.GameController;
  * Loads JSON file that contains the controller mappings
  */
 public final class Loader {
-    public static GameController driver, gunner;
+    private static GameController driver, gunner;
 
     public static void loadJSON(String src, GameController driverC, GameController gunnerC){
         driver=driverC;
@@ -33,15 +33,14 @@ public final class Loader {
         Object obj;
         System.out.println("START PATH: "+System.getProperty("user.dir"));
         try{ // Loads file if it exists
-            //File f=new File(Loader.class.getResource(src).toURI());
             File f=new File("/home/lvuser/"+src);
             obj=new JSONParser().parse(new FileReader(f));
-        } catch (IOException | ParseException /*| URISyntaxException*/ e) {
-            System.out.println("[ERROR] COULDN'T LOAD PROFILES.JSON");
+        } catch (IOException | ParseException e) {
+            System.out.println("[ERROR] COULDN'T LOAD "+src.toUpperCase());
             e.printStackTrace();
             return;
         }
-        System.out.println("********FOUND PROFILES.JSON, NOW LOADING********");
+        System.out.println("********FOUND "+src.toUpperCase()+", NOW LOADING********");
         // Init json objects for driver
         JSONObject topObj=(JSONObject) obj;
         JSONObject driver=(JSONObject) topObj.get("driver");
@@ -73,7 +72,7 @@ public final class Loader {
         ProfileManager.setCurrentGunner(JSONMap.getGunnerProfileNames()[0]);
     }
 
-    //Util funciton, don't ask
+    //Converts Set of Objects to String array
     private static String[] setToString(Set<Object> source){
         String[] dest = new String[source.size()];
         int iter=0;
@@ -84,7 +83,7 @@ public final class Loader {
         return dest;
     }
 
-    //Util funciton, don't ask
+    //Loads a profile from a JSONObject
     private static ControllerProfile loadProfile(JSONObject profile,String name, String pilot){
         HashMap<String, JoystickButton> xboxMaps=new HashMap<>();
         fillMap(profile,xboxMaps,"xbox",pilot);
@@ -93,7 +92,7 @@ public final class Loader {
         return new ControllerProfile(name,xboxMaps,joystickMaps);
     }
 
-    //Util funciton, don't ask
+    //Fills a HasMap from a JSONObject
     private static void fillMap(JSONObject source, HashMap<String, JoystickButton> dest, String key, String pilot){
         JSONObject object=(JSONObject)source.get(key);
         Set keys=object.keySet();
@@ -104,7 +103,6 @@ public final class Loader {
                 dest.put((String)arr.get(0),j);
             }catch(NumberFormatException e){
                 e.printStackTrace();
-                System.out.println("BAAAAAAAAAAAAAAAAAAAAAAD CCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAAAAAST");
             }
         }
     }

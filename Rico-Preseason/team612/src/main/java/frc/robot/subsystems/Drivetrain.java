@@ -11,8 +11,6 @@ import frc.robot.commands.DefaultDrive;
 
 public class Drivetrain extends Subsystem {
 
-    // TODO: Change back to WPI_TalonSRX
-
     private WPI_TalonSRX talon_FL = new WPI_TalonSRX(RobotMap.TALON_PORT_FL);
     private WPI_TalonSRX talon_FR = new WPI_TalonSRX(RobotMap.TALON_PORT_FR);
     private WPI_TalonSRX talon_BL = new WPI_TalonSRX(RobotMap.TALON_PORT_BL);

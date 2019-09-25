@@ -36,14 +36,14 @@ public class DefaultDrive extends Command {
 
 
   protected void getInput() {  // Fetch the Joystick values, apply inversion if neccesary
-    direction_y = Loader.driver.getY();
-    direction_x = Loader.driver.getX();
-    rotation = Loader.driver.getZ();
+    direction_y = Loader.getDriverController().getY();
+    direction_x = Loader.getDriverController().getX();
+    rotation = Loader.getDriverController().getZ();
 
     System.out.println(direction_y);
     System.out.println(direction_x);
     System.out.println(rotation);
-    System.out.println(Loader.driver.getType());
+    System.out.println(Loader.getDriverController().getType());
 
   }
 

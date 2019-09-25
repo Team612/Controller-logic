@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.classes.profiles.GameController;
+import frc.robot.classes.profiles.JSONMap;
 import frc.robot.classes.profiles.Loader;
 import frc.robot.classes.profiles.ProfileManager;
 import frc.robot.subsystems.Drivetrain;
@@ -18,12 +20,27 @@ public class Robot extends TimedRobot
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+    private SendableChooser<String> driverProfiles = new SendableChooser<>();
+    private SendableChooser<String> gunnerProfiles = new SendableChooser<>();
 
     @Override
     public void robotInit() 
     {
         oi = new OI();
         Loader.loadJSON("profiles.json", new GameController(RobotMap.DRIVER_PORT), new GameController(RobotMap.GUNNER_PORT));
+
+        fillChooser(driverProfiles, JSONMap.getDriverProfileNames());
+        fillChooser(gunnerProfiles, JSONMap.getGunnerProfileNames());
+        SmartDashboard.putData("Driver Profile", driverProfiles);
+        SmartDashboard.putData("Gunner Profile", gunnerProfiles);
+    }
+
+    private void fillChooser(SendableChooser<String> choose, String[] profiles){
+        if(profiles.length==0)return;
+        for(String profile:profiles){
+            choose.addOption(profile, profile);
+        }
+        choose.setDefaultOption(profiles[0], profiles[0]);
     }
 
     @Override
@@ -36,6 +53,7 @@ public class Robot extends TimedRobot
     public void disabledPeriodic() 
     {
         Scheduler.getInstance().run();
+        selectProfiles();
     }
 
     @Override
@@ -58,6 +76,8 @@ public class Robot extends TimedRobot
     @Override
     public void teleopInit() 
     {
+        Loader.loadJSON("profiles.json", new GameController(RobotMap.DRIVER_PORT), new GameController(RobotMap.GUNNER_PORT));
+        
         if (autonomousCommand != null) 
         {
             autonomousCommand.cancel();
@@ -69,10 +89,8 @@ public class Robot extends TimedRobot
     {
         Scheduler.getInstance().run();
 
-        OI.driver.updateType();
-        OI.gunner.updateType();
-
         System.out.println("PRESSED: "+ProfileManager.getDriverButton("A").get());
+        selectProfiles();
 
     }
 
@@ -80,6 +98,11 @@ public class Robot extends TimedRobot
     public void testPeriodic() 
     {
         
+    }
+
+    private void selectProfiles(){
+            ProfileManager.setCurrentDriver(driverProfiles.getSelected());
+            ProfileManager.setCurrentGunner(gunnerProfiles.getSelected());
     }
     
 }
